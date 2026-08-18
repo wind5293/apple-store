@@ -3,7 +3,7 @@ import { ProductWithId } from "../types/products"
 
 type ProductCardProps = {
     product: ProductWithId,
-    priority: boolean
+    priority?: boolean
 }
 
 export default function ProductCard({ product, priority }: ProductCardProps) {
@@ -38,8 +38,8 @@ export default function ProductCard({ product, priority }: ProductCardProps) {
                     <h2 className="text-lg font-extrabold text-red-500">
                         {product.price.toLocaleString("vi-VN")}đ
                     </h2>
-                    <h3 className={`font-bold text-gray-400 ${product.originalPrice > product.price ? "line-through" : ""}`}>
-                        {product.originalPrice.toLocaleString("vi-VN")}đ
+                    <h3 className={`font-bold text-gray-400 line-through`}>
+                        {product.originalPrice ? product.originalPrice.toLocaleString("vi-VN") + "đ" : ""}
                     </h3>
                 </div>
                 <p className={`text-xs p-1 ${statusBackgroundColor()} w-fit rounded-sm`}>
