@@ -1,10 +1,17 @@
 import ProductCard from "./components/ProductCard";
 import { getFeaturedProducts, getProductsByCategory } from "./lib/products";
 
+export function generateMetadata() {
+    return {
+        title: "Home - Apple Store",
+        description: "Apple Store homepage",
+    }
+}
+
 export default async function Home() {
     const [products, iPhoneProducts] = await Promise.all([
         getFeaturedProducts(),
-        getProductsByCategory("iphone", 8)
+        getProductsByCategory("iphone", 8),
     ]);
 
     return (

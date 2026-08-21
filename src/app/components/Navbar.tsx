@@ -6,11 +6,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CategoryWithId } from "../types/category";
 
-type NavbarProps = {
-    username: string,
-    categories: CategoryWithId[];
-}
-
 const USER_MENU_ITEMS = [
     {
         id: 'profile',
@@ -32,7 +27,10 @@ const USER_MENU_ITEMS = [
     }
 ];
 
-export default function Navbar({ username, categories }: NavbarProps) {
+export default function Navbar({ username, categories }: {
+    username: string,
+    categories: CategoryWithId[];
+}) {
     const router = useRouter();
 
     const [showCategory, setShowCategory] = useState(false);
@@ -74,6 +72,7 @@ export default function Navbar({ username, categories }: NavbarProps) {
                 <Image
                     width={100}
                     height={60}
+                    style={{ width: "auto", height: "auto" }}
                     src="/store-logo.png"
                     alt="store logo"
                 />
