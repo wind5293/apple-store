@@ -1,6 +1,7 @@
 import Navbar from "./components/Navbar";
 import { getCategories } from "./lib/category";
 import "./globals.css";
+import AuthProvider from "./context/AuthContext";
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
     const categories = await getCategories();
@@ -11,8 +12,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             className=""
         >
             <body className="">
-                <Navbar categories={categories} username="Welcome"/>
-                {children}
+                <AuthProvider>
+                    <Navbar categories={categories} />
+                    {children}
+                </AuthProvider>
             </body>
         </html>
     );

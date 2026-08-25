@@ -1,2 +1,7 @@
 @import "tailwindcss";
 
+@layer components {
+    .input-field {
+        @apply border border-gray-300 placeholder:text-gray-400 rounded-lg p-4 w-96 focus:border-gray-400 focus:outline-none;
+    }
+}

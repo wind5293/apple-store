@@ -1,10 +1,13 @@
 "use client";
-import { Bell, ChevronDown, ClipboardList, LayoutGrid, LogOut, Search, ShoppingCart, User, icons } from "lucide-react";
+import { Bell, ChevronDown, ClipboardList, LayoutGrid, Loader, LogOut, Search, ShoppingCart, User, icons } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CategoryWithId } from "../types/category";
+import { useAuth } from "../context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 const USER_MENU_ITEMS = [
     {
@@ -27,8 +30,7 @@ const USER_MENU_ITEMS = [
     }
 ];
 
-export default function Navbar({ username, categories }: {
-    username: string,
+export default function Navbar({ categories }: {
     categories: CategoryWithId[];
 }) {
     const router = useRouter();
@@ -39,10 +41,10 @@ export default function Navbar({ username, categories }: {
     const userRef = useRef<HTMLDivElement>(null);
     const categoryRef = useRef<HTMLDivElement>(null);
 
-    const isLoggedIn = true;
+    const { user, isLoading } = useAuth();
 
     function handleUserClick() {
-        if (!isLoggedIn) {
+        if (user === null) {
             router.push("/login");
         } else {
             setIsUserMenuOpen(!isUserMenuOpen)
@@ -62,8 +64,12 @@ export default function Navbar({ username, categories }: {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    function handleLogout() {
-
+    async function handleLogout() {
+        await fetch("/api/auth/logout", {
+            method: "POST",
+        });
+        await signOut(auth);
+        router.push("/");
     }
 
     return (
@@ -105,7 +111,7 @@ export default function Navbar({ username, categories }: {
                 )}
             </div>
             <div className="relative flex flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18}/>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                 <input
                     placeholder="Search"
                     className="border w-full border-gray-300 pl-10 pr-4 py-2 rounded-xl focus:outline-none"
@@ -127,7 +133,12 @@ export default function Navbar({ username, categories }: {
                         className="cursor-pointer hover:text-black/70 transition-colors flex items-center gap-1"
                     >
                         <User />
-                        <span className="hidden md:block text-sm">{username}</span>
+                        <span className="hidden md:block text-sm">
+                            {isLoading
+                                ? <Loader />
+                                : (user ? user.email : "Welcome")
+                            }
+                        </span>
                     </div>
 
                     {isUserMenuOpen && (

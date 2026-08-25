@@ -3,7 +3,7 @@ import { getFeaturedProducts, getProductsByCategory } from "./lib/products";
 
 export function generateMetadata() {
     return {
-        title: "Home - Apple Store",
+        title: "Trang chủ - Apple Store",
         description: "Apple Store homepage",
     }
 }
