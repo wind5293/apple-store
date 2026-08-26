@@ -8,6 +8,7 @@ import { CategoryWithId } from "../types/category";
 import { useAuth } from "../context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
+import { useCart } from "../context/CartContext";
 
 const USER_MENU_ITEMS = [
     {
@@ -42,6 +43,7 @@ export default function Navbar({ categories }: {
     const categoryRef = useRef<HTMLDivElement>(null);
 
     const { user, isLoading } = useAuth();
+    const { items } = useCart();
 
     function handleUserClick() {
         if (user === null) {
@@ -123,7 +125,7 @@ export default function Navbar({ categories }: {
                         <span className="hidden md:block text-sm">Giỏ hàng</span>
                         <div className="relative">
                             <ShoppingCart />
-                            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">{items.length}</span>
                         </div>
                     </div>
                 </Link>

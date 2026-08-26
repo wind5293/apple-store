@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ProductWithId } from "../types/products"
 import Link from "next/link";
 import { hasDiscount } from "../lib/helpers";
+import AddToCartButton from "./AddToCartButton";
 
 export default function ProductCard({ product, priority }: {
     product: ProductWithId,
@@ -16,7 +17,7 @@ export default function ProductCard({ product, priority }: {
     }
 
     return (
-        <div className="flex flex-col items-center gap-3 p-5 w-68 max-h-120 bg-white hover:shadow-sm border border-gray-200 rounded-md relative">
+        <div className="flex flex-col items-stretch gap-3 p-5 w-68 max-h-120 bg-white hover:shadow-sm border border-gray-200 rounded-md relative">
             {product.discountPercent > 0 && (
                 <span className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">
                     -{product.discountPercent}%
@@ -58,10 +59,7 @@ export default function ProductCard({ product, priority }: {
                     </div>
                 </div>
             </Link>
-            <button
-
-                className="mt-auto text-sm font-bold "
-            >Thêm vào giỏ hàng</button>
+            <AddToCartButton productId={product.id} />
         </div>
     );
 }

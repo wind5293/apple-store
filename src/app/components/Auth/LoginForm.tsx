@@ -74,7 +74,7 @@ export default function LoginForm() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="bg-[#D70018] rounded-lg p-3 text-center font-semibold text-white mt-2 w-96 disabled:bg-gray-600"
+                            className="bg-[#FF102B] hover:bg-[#D70018] rounded-lg p-3 text-center font-semibold text-white mt-2 w-96 disabled:bg-gray-600"
                         >
                             Đăng nhập
                         </button>
