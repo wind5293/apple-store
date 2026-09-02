@@ -17,7 +17,7 @@ export default function ProductCard({ product, priority }: {
     }
 
     return (
-        <div className="flex flex-col items-stretch gap-3 p-5 w-68 max-h-120 bg-white hover:shadow-sm border border-gray-200 rounded-md relative">
+        <div className="flex flex-col items-stretch gap-3 p-5 w-68 max-h-120 bg-white hover:shadow-lg border border-gray-200 rounded-md relative group overflow-hidden hover:-translate-y-1 transition-all duration-200">
             {product.discountPercent > 0 && (
                 <span className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">
                     -{product.discountPercent}%

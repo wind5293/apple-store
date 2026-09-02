@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs, limit, query, where, QueryConstraint } from "firebase/firestore";
+import { collection, getDocs, limit, query, where, QueryConstraint, documentId } from "firebase/firestore";
 import { ProductWithId } from "../types/products";
 import { cache } from "react";
 
@@ -66,5 +66,22 @@ export async function getProductsByGroupId(productGroupId: string): Promise<Prod
         } as ProductWithId
     ));
 
+    return docs;
+}
+
+export async function getProductsByIds(productIds: string[]) : Promise<ProductWithId[]> {
+    if (productIds.length === 0) return [];
+
+    const querySnapshot = await getDocs(query(
+        collection(db, "products"),
+        where(documentId(), "in", productIds)
+    ));
+
+    const docs = querySnapshot.docs.map((item) => (
+        {
+            id: item.id,
+            ...item.data()
+        } as ProductWithId
+    ));
     return docs;
 }

@@ -4,10 +4,6 @@ import Link from "next/link";
 export default function ProductInfo({ product, variants }: { product: ProductWithId, variants: ProductWithId[] }) {
     const inStock = product.stockQuantity > 0;
 
-    function statusBackgroundColor() {
-        return inStock ? "bg-[#DFF9E8]" : "bg-[#F2F2F3]";
-    }
-
     return (
         <div className="flex flex-col w-full gap-3">
             <div className="flex flex-col w-full justify-center items-center border border-[#84B1FB] bg-[#F6FAFF] rounded-2xl py-6">

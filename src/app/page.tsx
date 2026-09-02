@@ -28,7 +28,7 @@ export default async function Home() {
             <div className="flex flex-col gap-4">
                 <span className="font-bold text-2xl">iPhone bán chạy</span>
                 <div className="grid grid-cols-4 gap-5">
-                    {iPhoneProducts.map((product, index) => (
+                    {iPhoneProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
