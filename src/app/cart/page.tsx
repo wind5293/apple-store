@@ -5,7 +5,9 @@ import { ProductWithId } from "../types/products";
 import { getProductsByIds } from "../lib/products";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 import Image from "next/image";
+import { createOrder } from "../lib/orders";
 
 export default function CartPage() {
     const [products, setProducts] = useState<ProductWithId[]>([]);
@@ -13,9 +15,11 @@ export default function CartPage() {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const { items, setQuantity, deleteFromCart } = useCart();
+    const { user } = useAuth();
 
     const router = useRouter();
 
@@ -198,8 +202,23 @@ export default function CartPage() {
                         <span>Tổng cộng: <span className="text-[#D70018] font-bold text-lg">
                             {totalPrice.toLocaleString("vi-VN")}đ</span></span>
                         <button
-                            onClick={() => { router.push("/cart/payment-info") }}
-                            className="bg-[#D70018] text-white px-8 py-3 rounded-md font-semibold "
+                            disabled={selectedIds.size === 0 || isCheckingOut || user === null} 
+                            onClick={async () => {
+                                setIsCheckingOut(true);
+                                try {
+                                    if (user) {
+                                        const orderId = await createOrder(user.uid, items, products, selectedIds);
+                                        router.push(`/cart/payment-info/${orderId}`);
+                                    } else {
+                                        setError("Không lấy được thông tin người dùng");
+                                    }
+                                } catch {
+                                    setError("Không thể tải trang thanh toán do lỗi kết nối");
+                                } finally {
+                                    setIsCheckingOut(false);
+                                }
+                            }}
+                            className="bg-[#D70018] text-white px-8 py-3 rounded-md font-semibold disabled:bg-gray-400"
                         >
                             Thanh toán
                         </button>

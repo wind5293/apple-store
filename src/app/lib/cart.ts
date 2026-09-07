@@ -28,3 +28,4 @@ export async function deleteCartItem(uid: string, productId: string) {
     const itemRef = doc(db, "carts", uid, "items", productId);
     await deleteDoc(itemRef);
 }
+
