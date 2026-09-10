@@ -15,13 +15,13 @@ const USER_MENU_ITEMS = [
         id: 'profile',
         name: 'Tài khoản của tôi',
         icon: User,
-        path: '/profile'
+        path: '/me/profile'
     },
     {
         id: 'orders',
         name: 'Đơn mua',
         icon: ClipboardList,
-        path: '/orders'
+        path: '/me/orders'
     },
     {
         id: 'notifications',

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { adminDb } from "./firebase-admin";
 import { OrderWithId } from "./orders";
 
@@ -15,7 +16,7 @@ export async function getOrderByIdAdmin(orderId: string): Promise<OrderWithId | 
     } as OrderWithId;
 }
 
-export async function getUserOrders(uid: string): Promise<OrderWithId[]> {
+export const getUserOrders = cache(async (uid: string): Promise<OrderWithId[]> => {
     const snapshot = await adminDb.collection("orders")
         .where("uid", "==", uid)
         .where("status", "==", "completed")
@@ -29,4 +30,4 @@ export async function getUserOrders(uid: string): Promise<OrderWithId[]> {
             createdAt: doc.data()?.createdAt?.toDate(),
         } as OrderWithId
     ));
-}
+});

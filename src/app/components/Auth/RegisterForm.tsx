@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthErrorMessage, registerWithEmail, signInWithGoogle } from "@/app/lib/auth";
 import { ChevronLeft } from "lucide-react";
+import { createUserProfile, UserProfile } from "@/app/lib/users";
 
 export default function RegisterForm() {
     const router = useRouter();
@@ -57,6 +58,14 @@ export default function RegisterForm() {
         try {
             const result = await registerWithEmail(email, password);
             if (result) {
+                const userProfile: Pick<UserProfile, "name" | "dob" | "tel" | "email"> = {
+                    name: name,
+                    dob: dateOfBirth,
+                    email: email,
+                    tel: tel, 
+                }
+                await createUserProfile(result.user.uid, userProfile);
+
                 const idToken = await result.user.getIdToken();
                 await fetch("/api/auth/session", {
                     method: "POST",
@@ -90,7 +99,7 @@ export default function RegisterForm() {
                 <p className="text-[#71717A] font-semibold">Đăng kí bằng các tài khoản</p>
                 <div>
                     <button
-                        onClick={() => signInWithGoogle}
+                        onClick={signInWithGoogle}
                         className="w-40 shadow-md p-5 rounded-md font-semibold"
                     >
                         Google

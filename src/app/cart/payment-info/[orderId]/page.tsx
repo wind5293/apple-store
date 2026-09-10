@@ -1,5 +1,4 @@
-import { adminAuth } from "@/app/lib/firebase-admin";
-import { cookies } from "next/headers";
+import { getAuthenticatedUser } from "@/app/lib/firebase-admin";
 import { redirect } from "next/navigation";
 import PaymentInfoClient from "./PaymentInfoClient";
 import { getOrderByIdAdmin } from "@/app/lib/orders-admin";
@@ -16,19 +15,7 @@ export default async function Page({ params }: {
 }) {
     const { orderId } = await params;
 
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("session")?.value;
-    if (!sessionCookie) {
-        redirect("/login");
-    }
-
-    let decodeClaims;
-    try {
-        decodeClaims = await adminAuth.verifySessionCookie(sessionCookie); 
-    } catch(error) {
-        console.error("Phiên đăng nhập hết hạn");
-        redirect("/login");
-    }
+    const decodeClaims = await getAuthenticatedUser();
     
     const order = await getOrderByIdAdmin(orderId);
     if (!order) {
