@@ -19,7 +19,7 @@ export async function getOrderByIdAdmin(orderId: string): Promise<OrderWithId | 
 export const getUserOrders = cache(async (uid: string): Promise<OrderWithId[]> => {
     const snapshot = await adminDb.collection("orders")
         .where("uid", "==", uid)
-        .where("status", "==", "completed")
+        .where("status", "!=", "draft")
         .orderBy("createdAt", "desc")
         .get();
 

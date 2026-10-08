@@ -28,6 +28,8 @@ type DeliveryInfo = {
 
 export type ShippingInfo = PickupInfo | DeliveryInfo;
 
+export type OrderStatus = "pending" | "confirmed" | "shipped" | "completed" | "cancelled";
+
 type DraftOrder = {
     id: string,
     uid: string,
@@ -40,7 +42,7 @@ export type CompletedOrder = {
     id: string,
     uid: string,
     items: OrderItem[],
-    status: "completed",
+    status: OrderStatus,
     createdAt: Timestamp,
     shippingInfo: ShippingInfo,
     email?: string,

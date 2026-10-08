@@ -43,4 +43,16 @@ export async function updateUserProfile(
     await updateDoc(userRef, data);
 }
 
+export async function updateUserAddress(
+    uid: string,
+    data: Omit<Address, "id">
+) {
+    const userRef = doc(db, "users", uid);
+    const defaultAddress: Address = {
+        id: crypto.randomUUID(),
+        ...data,
+    };
+    await updateDoc(userRef, { defaultAddress });
+}
+
 

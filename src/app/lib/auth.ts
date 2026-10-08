@@ -1,8 +1,11 @@
 import { 
     createUserWithEmailAndPassword, 
+    EmailAuthProvider, 
     GoogleAuthProvider, 
+    reauthenticateWithCredential, 
     signInWithEmailAndPassword, 
-    signInWithPopup
+    signInWithPopup,
+    updatePassword
 } from "firebase/auth";
 import { auth } from "./firebase";
 
@@ -19,6 +22,17 @@ export async function signInWithGoogle() {
     return await signInWithPopup(auth, googleProvider);
 }
 
+export async function changeUserPassword(currentPassword: string, newPassword: string) {
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+        throw { code: "auth/no-current-user" };
+    }
+
+    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPassword);
+}
+
 export function getAuthErrorMessage(code: string): string {
     switch (code) {
         case "auth/email-already-in-use":
@@ -27,6 +41,10 @@ export function getAuthErrorMessage(code: string): string {
             return "Mật khẩu yếu."
         case "auth/invalid-credential":
             return "Thông tin đăng nhập không hợp lệ."
+        case "auth/wrong-password":
+            return "Mật khẩu hiện tại không đúng."
+        case "auth/no-current-user":
+            return "Đăng nhập hết hạn, vui lòng đăng nhập lại."
         default:
             return "Đăng nhập thất bại."
     }

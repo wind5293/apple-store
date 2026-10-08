@@ -2,6 +2,7 @@ import { getAuthenticatedUser } from "@/app/lib/firebase-admin";
 import { redirect } from "next/navigation";
 import PaymentInfoClient from "./PaymentInfoClient";
 import { getOrderByIdAdmin } from "@/app/lib/orders-admin";
+import { getUserProfile } from "@/app/lib/users-admin";
 
 export function generateMetadata() {
     return {
@@ -25,7 +26,9 @@ export default async function Page({ params }: {
         redirect("/cart");
     }
 
+    const userProfile = await getUserProfile(decodeClaims.uid);
+
     return (
-        <PaymentInfoClient order={order} />
+        <PaymentInfoClient order={order} uid={decodeClaims.uid} userProfile={userProfile} />
     );
 }

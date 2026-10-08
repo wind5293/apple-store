@@ -10,20 +10,27 @@ import { getProductsByIds } from "@/app/lib/products";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
+import { UserProfile, updateUserAddress, updateUserProfile } from "@/app/lib/users";
 
-export default function PaymentInfoClient({ order }: { order: OrderWithId }) {
+type PaymentInfoCardProps = {
+    order: OrderWithId,
+    uid: string,
+    userProfile: UserProfile | null;
+}
+
+export default function PaymentInfoClient({ order, uid, userProfile }: PaymentInfoCardProps) {
     const [emailContact, setEmailContact] = useState("");
     const [selectedProvince, setSelectedProvince] = useState("");
     const [selectedDistrict, setSelectedDistrict] = useState("");
     const [selectedCommune, setSelectedCommune] = useState("");
     const [shopAddress, setShopAddress] = useState("");
-    const [recipientName, setRecipientName] = useState("");
-    const [recipientNumber, setRecipientNumber] = useState("");
+    const [recipientName, setRecipientName] = useState(userProfile?.name ?? "");
+    const [recipientNumber, setRecipientNumber] = useState(userProfile?.tel ?? "");
     const [recipientAddress, setRecipientAddress] = useState("");
     const [note, setNote] = useState("");
     const [pickUpInStoreFlag, setPickUpInStoreFlag] = useState(true);
-    const [companyInvolce, setCompanyInvolce] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState<"" | "store" | "qr" | "vnpay" | "momo">("");
+    const [saveAddress, setSaveAddress] = useState(false);
 
     const [products, setProducts] = useState<ProductWithId[]>([]);
     const [isLoadingProducts, setIsLoadingProducts] = useState(true);
@@ -151,8 +158,8 @@ export default function PaymentInfoClient({ order }: { order: OrderWithId }) {
                         <h3 className="font-semibold">Thông tin khách hàng</h3>
                         <div className="flex flex-row justify-between mt-2">
                             <div className="flex flex-col gap-1 flex-2">
-                                <p className="font-semibold">Nguyễn Đức Phong</p>
-                                <p>0981696125</p>
+                                <p className="font-semibold">{userProfile?.name }</p>
+                                <p>{userProfile?.tel}</p>
                             </div>
                             <div className="flex flex-col gap-2 flex-3 border-l border-gray-300 px-5">
                                 <p>Email</p>

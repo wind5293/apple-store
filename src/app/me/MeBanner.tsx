@@ -30,7 +30,7 @@ export default function MeBanner({ name, tel, totalOrders }: MeBannerProps) {
                     <p className="font-bold">{name}</p>
                     <div className="flex flex-row gap-1 items-center">
                         <p className="text-sm text-gray-500">
-                            {hideTelephone ? hideTelephoneNumber(tel) : (tel || "-")}
+                            {hideTelephone ? hideTelephoneNumber(tel) : (tel?.toString() || "-")}
                         </p>
                         <button
                             type="button"

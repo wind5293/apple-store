@@ -34,3 +34,13 @@ export type Product = {
 };
 
 export type ProductWithId = Product & { id: string };
+
+export type ProductFilters = {
+    search?: string;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    storageGB?: string;
+    color?: string;
+    sort?: "price_asc" | "price_desc" | "newest";
+};

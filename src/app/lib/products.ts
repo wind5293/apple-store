@@ -1,6 +1,6 @@
 import { db } from "./firebase";
 import { collection, getDocs, limit, query, where, QueryConstraint, documentId } from "firebase/firestore";
-import { ProductWithId } from "../types/products";
+import { ProductFilters, ProductWithId } from "../types/products";
 import { cache } from "react";
 
 export async function getFeaturedProducts(count: number = 8): Promise<ProductWithId[]> {
@@ -83,5 +83,52 @@ export async function getProductsByIds(productIds: string[]) : Promise<ProductWi
             ...item.data()
         } as ProductWithId
     ));
+    return docs;
+}
+
+export async function searchProducts(filters: ProductFilters): Promise<ProductWithId[]> {
+    const cond: QueryConstraint[] = [where("status", "==", "active")];
+    if (filters.category) {
+        cond.push(where("categorySlug", "==", filters.category));
+    }
+    cond.push(limit(200));
+
+    const querySnapshot = await getDocs(query(collection(db, "products"), ...cond));
+    let docs = querySnapshot.docs.map((item) => (
+        {
+            id: item.id,
+            ...item.data()
+        } as ProductWithId
+    ));
+
+    if (filters.search) {
+        const keyword = filters.search.trim().toLowerCase();
+        docs = docs.filter(p => p.name.toLowerCase().includes(keyword));
+    }
+    if (filters.minPrice !== undefined) {
+        docs = docs.filter(p => p.price >= filters.minPrice!);
+    }
+    if (filters.maxPrice !== undefined) {
+        docs = docs.filter(p => p.price <= filters.maxPrice!);
+    }
+    if (filters.storageGB) {
+        docs = docs.filter(p => p.storageGB === filters.storageGB);
+    }
+    if (filters.color) {
+        docs = docs.filter(p => p.colors.includes(filters.color!));
+    }
+
+    switch (filters.sort) {
+        case "price_asc":
+            docs = [...docs].sort((a, b) => a.price - b.price);
+            break;
+        case "price_desc":
+            docs = [...docs].sort((a, b) => b.price - a.price);
+            break;
+        case "newest":
+            docs = [...docs].sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0));
+            break;
+    }
+
     return docs;
 }

@@ -5,6 +5,7 @@ import { Plus, SquarePen } from "lucide-react";
 import SlideOverModal from "../SlideOverModal";
 import { useState } from "react";
 import ProfileUpdateForm from "../ProfileUpdateForm";
+import AddressUpdateForm from "../AddressUpdateForm";
 
 function formatDob(dob: string) {
     if (!dob) return "-";
@@ -21,7 +22,7 @@ export default function UserProfileInformation({ userProfile, uid }: { userProfi
             case 'profile':
                 return <ProfileUpdateForm userProfile={userProfile} uid={uid} />;
             case 'address':
-                return <div>Address form goes here</div>;
+                return <AddressUpdateForm uid={uid} onSuccess={() => setActivePopup(null)} />;
             case 'password':
                 return <div>Password form goes here</div>;
             default:
@@ -39,6 +40,19 @@ export default function UserProfileInformation({ userProfile, uid }: { userProfi
                 return "Đổi mật khẩu";
             default:
                 return "";
+        }
+    }
+
+    function showGender(gender: string | undefined) {
+        switch (gender) {
+            case "male":
+                return "Nam";
+            case "female":
+                return "Nữ";
+            case "other":
+                return "Khác";  
+            default:
+                return "-";
         }
     }
 
@@ -68,7 +82,7 @@ export default function UserProfileInformation({ userProfile, uid }: { userProfi
                     <div className="border-b border-gray-200"></div>
                     <div className="flex flex-row justify-between items-center">
                         <p className="text-gray-500">Giới tính: </p>
-                        <p className="font-semibold">{userProfile?.gender ?? "-"}</p>
+                        <p className="font-semibold">{showGender(userProfile?.gender)}</p>
                     </div>
                     <div className="flex flex-row justify-between items-center">
                         <p className="text-gray-500">Email: </p>

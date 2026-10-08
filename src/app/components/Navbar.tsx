@@ -37,6 +37,7 @@ export default function Navbar({ categories }: {
     const router = useRouter();
 
     const [showCategory, setShowCategory] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState("");
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
     const userRef = useRef<HTMLDivElement>(null);
@@ -101,7 +102,7 @@ export default function Navbar({ categories }: {
                             return (
                                 <div
                                     key={item.id}
-                                    onClick={() => router.push(item.slug)}
+                                    onClick={() => router.push(`/products?category=${item.slug}`)}
                                     className="px-4 py-2 text-sm text-black hover:bg-gray-100 transition-colors cursor-pointer flex items-center gap-3"
                                 >
                                     {IconComponent && <IconComponent className="w-5 text-center" />}
@@ -112,13 +113,22 @@ export default function Navbar({ categories }: {
                     </div>
                 )}
             </div>
-            <div className="relative flex flex-1">
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    const trimmed = searchKeyword.trim();
+                    router.push(trimmed ? `/products?search=${encodeURIComponent(trimmed)}` : "/products");
+                }}
+                className="relative flex flex-1"
+            >
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                 <input
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
                     placeholder="Search"
                     className="border w-full border-gray-300 pl-10 pr-4 py-2 rounded-xl focus:outline-none"
                 />
-            </div>
+            </form>
             <div className="flex items-center gap-8">
                 <Link href="/cart">
                     <div className="cursor-pointer hover:text-black/70 transition-colors flex items-center gap-1">
